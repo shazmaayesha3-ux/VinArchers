@@ -1,0 +1,89 @@
+PROMPT 7 — ROUTELESS OFFLINE-FIRST PWA
+ROLE
+
+Act as a senior PWA architect and offline systems engineer.
+
+Continue the existing ROUTELESS project.
+
+OBJECTIVE
+
+Make ROUTELESS usable during weak connectivity and complete internet disconnection.
+
+TECHNOLOGIES
+React PWA.
+Service Workers.
+IndexedDB.
+Workbox.
+Dexie.
+Background Sync where supported.
+OFFLINE STORAGE
+
+Cache and store:
+
+Application shell.
+Bus records.
+Stops.
+Routes.
+Timetables.
+Student saved journeys.
+Alternative routes.
+Last-known bus status.
+Last-known GPS.
+Emergency transportation plans.
+OFFLINE FEATURES
+
+Students must be able to:
+
+Open the installed application.
+Search saved destinations.
+View saved bus schedules.
+Calculate alternative journeys.
+View saved emergency instructions.
+
+Drivers must be able to:
+
+Record bus status.
+Queue journey updates.
+Save GPS records.
+Synchronize later.
+
+Kiosks must be able to:
+
+Open without internet.
+Search saved routes.
+Display cached bus information.
+Show the last synchronization time.
+SYNCHRONIZATION
+
+Implement:
+
+Local outbox.
+Unique operation IDs.
+Original timestamps.
+Retry handling.
+Duplicate prevention.
+Resumable synchronization.
+Conflict handling.
+Synchronization status.
+
+Never claim that an offline update has reached another device.
+
+NETWORK MODES
+FULL CONNECTIVITY.
+LOW DATA.
+OFFLINE.
+
+Display freshness warnings and app version.
+
+ACCEPTANCE TESTS
+App opens offline after installation.
+Saved routes work offline.
+Data survives application restart.
+Queued updates synchronize later.
+Duplicate uploads are prevented.
+Offline status is visible.
+Stale information is never hidden.
+
+Demonstrate offline behavior using browser network throttling and airplane mode where supported.
+
+Preserve earlier functionality.
