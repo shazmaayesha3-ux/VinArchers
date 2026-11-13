@@ -1,0 +1,138 @@
+PROMPT 10 — ROUTELESS FINAL INTEGRATION AND DEPLOYMENT
+ROLE
+
+Act as a senior software architect, QA engineer, cybersecurity engineer and DevOps engineer.
+
+Continue the existing ROUTELESS project.
+
+OBJECTIVE
+
+Integrate all ten development stages into one coherent, tested and demonstrable application.
+
+REQUIRED MODULES
+
+Verify integration of:
+
+Project foundation.
+Database and demonstration data.
+Driver registration and verification.
+Student dashboard.
+Dijkstra routing.
+Missed Bus Rescue.
+Smart kiosk.
+GPS tracking.
+Offline PWA.
+Synchronization.
+Crisis Control Center.
+Emergency event management.
+Flood routing.
+Examination priority.
+Bus reallocation.
+Crisis recovery.
+TESTING
+
+Create automated tests for:
+
+Normal transportation
+Direct route.
+Connecting route.
+Unavailable bus.
+Missed bus.
+Stale GPS.
+Examination arrival deadline.
+Driver security
+Pending driver.
+Rejected driver.
+Approved driver.
+Unauthorized bus modification.
+Offline
+First installation.
+Offline restart.
+Cached journey search.
+Queued updates.
+Duplicate prevention.
+Reconnection.
+Crisis
+Two buses unavailable.
+40% demand increase.
+Flooded road.
+Examination priority.
+Insufficient capacity.
+Unassigned students.
+Crisis recovery.
+SECURITY
+
+Verify:
+
+Role-based access.
+Server-side authorization where a backend is configured.
+Sensitive document protection.
+Environment variable handling.
+Input validation.
+Audit logs.
+No private API keys in frontend bundles.
+PERFORMANCE
+
+Check:
+
+Application loading.
+Mobile responsiveness.
+Offline usability.
+Routing performance.
+Allocation performance.
+Accessibility.
+Bundle size.
+OPTIONAL INTEGRATIONS
+
+Prepare configuration for:
+
+Firebase Authentication.
+Firestore.
+Firebase Storage.
+Firebase Cloud Functions.
+Gemini API.
+SMS gateway.
+Leaflet and map services.
+
+Only describe integrations as live if configured and tested.
+
+DEPLOYMENT
+
+Prepare:
+
+README.md.
+.env.example.
+GitHub-ready source code.
+Vercel deployment instructions.
+Demo credentials.
+Seed-data documentation.
+Known limitations.
+Architecture documentation.
+FINAL DEMONSTRATION
+
+Provide a walkthrough demonstrating:
+
+Student finds a bus.
+Student finds an alternative route.
+Driver updates bus status.
+Admin verifies a driver.
+Kiosk searches for a destination.
+Application works offline.
+Two buses become unavailable.
+A road becomes flooded.
+Demand increases by 40%.
+Examination students receive priority.
+Available buses are reallocated.
+Unassigned students receive explanations.
+Crisis recovery restores normal operation.
+FINAL RULE
+
+Do not claim production readiness without evidence.
+
+Do not show fake success messages.
+
+Do not hardcode optimization results.
+
+Report what works, what is simulated, what remains incomplete and how to reproduce the tests.
+
+Deliver the final integrated ROUTELESS application.
