@@ -1,0 +1,83 @@
+PROMPT 4 — ROUTELESS STUDENT TRANSPORTATION DASHBOARD
+ROLE
+
+Act as a senior frontend engineer and transportation product designer.
+
+Continue the existing ROUTELESS application.
+
+OBJECTIVE
+
+Build a complete student journey-search experience.
+
+STUDENT DASHBOARD
+
+Display:
+
+Welcome section.
+Starting village.
+Current bus stop.
+Destination search.
+School or college selection.
+Preferred arrival time.
+Examination arrival deadline.
+Recent journeys.
+Saved journeys.
+Bus availability.
+BUS INFORMATION
+
+Display:
+
+Bus number.
+Registration number.
+Route.
+Departure time.
+Arrival time.
+Upcoming stops.
+Available seats.
+Bus status.
+Driver verification badge.
+Last-updated timestamp.
+
+Statuses:
+
+AVAILABLE
+DELAYED
+UNAVAILABLE
+NOT CONFIRMED
+OFFLINE / LAST KNOWN
+
+Never present stale information as confirmed live information.
+
+JOURNEY RESULTS
+
+Display:
+
+Direct bus journeys.
+Connecting bus journeys.
+Boarding stops.
+Transfer points.
+Waiting times.
+Estimated arrival.
+Total journey duration.
+Alternative options.
+LANGUAGE
+
+Implement English and Kannada interface support.
+
+Use a language toggle and translation files.
+
+USER EXPERIENCE
+
+Create a simple, accessible interface suitable for students using low-end Android devices.
+
+ACCEPTANCE TESTS
+Student can search a destination.
+Direct journeys appear.
+Connecting journeys appear.
+Bus information is displayed correctly.
+Unavailable buses are clearly marked.
+Stale data shows its timestamp.
+Alternative journeys are displayed where available.
+No-result searches show a useful explanation.
+
+Implement the actual frontend and data integration. Preserve earlier modules.
