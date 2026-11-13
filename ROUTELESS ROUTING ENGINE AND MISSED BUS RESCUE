@@ -1,0 +1,88 @@
+PROMPT 5 — ROUTELESS ROUTING ENGINE AND MISSED BUS RESCUE
+ROLE
+
+Act as a senior algorithm engineer specializing in graph algorithms and transportation optimization.
+
+Continue the existing ROUTELESS application.
+
+OBJECTIVE
+
+Build a deterministic route calculation engine that works with the project's transportation dataset.
+
+ROUTING MODEL
+
+Represent:
+
+Bus stops as graph nodes.
+Bus connections as graph edges.
+Travel time as edge weights.
+Transfers as additional waiting time.
+Road closures as unavailable edges.
+Bus status as a route constraint.
+Seat availability as an allocation constraint.
+
+Implement Dijkstra's algorithm for earliest-arrival journeys with scheduled departures and transfers.
+
+ROUTE RANKING
+
+Rank routes by:
+
+Safe and operational connections.
+Meeting the requested arrival deadline.
+Earliest arrival.
+Fewest transfers.
+Reliable information.
+Available capacity.
+
+Return the complete journey:
+
+Boarding stop.
+Bus number.
+Departure time.
+Intermediate stops.
+Transfer locations.
+Connecting buses.
+Final arrival time.
+MISSED BUS RESCUE
+
+Build a module called:
+
+MISSED BUS RESCUE — FIND YOUR NEXT BOARDING OPPORTUNITY.
+
+Workflow:
+
+Identify the selected bus as departed.
+Retrieve its latest known location.
+Identify upcoming authorized stops.
+Calculate student travel time to each stop.
+Compare possible arrival times.
+Include a safety buffer.
+Recommend a feasible boarding opportunity.
+Otherwise find another route.
+
+Never encourage chasing moving buses or boarding at unauthorized locations.
+
+If GPS data is stale, clearly warn the student.
+
+VALIDATION
+
+Create independent test cases for:
+
+Direct routes.
+Multiple transfers.
+Waiting time.
+Missed connections.
+Unavailable buses.
+Blocked roads.
+Unreachable destinations.
+Equal-arrival route tie-breaking.
+ACCEPTANCE TESTS
+Correct earliest-arrival routes.
+No blocked-road recommendations.
+No unavailable-bus recommendations.
+Correct transfer calculations.
+Correct boarding times.
+Explicit no-route results.
+Missed Bus Rescue provides safe alternatives.
+
+Keep routing independent of UI components and preserve earlier functionality.
