@@ -1,0 +1,78 @@
+PROMPT 2 — ROUTELESS DATABASE AND DATA ARCHITECTURE
+ROLE
+
+Act as a senior database architect and backend engineer.
+
+Continue developing the existing ROUTELESS project. Do not recreate Prompt 1.
+
+OBJECTIVE
+
+Build a consistent data architecture supporting normal transportation, student journeys, driver management, kiosks and emergency transportation.
+
+DATA MODELS
+
+Create structured schemas for:
+
+Users
+Students
+Drivers
+Driver verification
+Buses
+Bus capacities
+Routes
+Stops
+Trips
+Bus locations
+Bus availability
+Schools and colleges
+Student transport requests
+Examination schedules
+Road segments
+Crisis events
+Emergency allocations
+Kiosks
+Reports
+Synchronization records
+DEMONSTRATION DATA
+
+Create realistic fictional records containing:
+
+At least 5 villages.
+At least 10 bus stops.
+At least 8 buses.
+At least 5 drivers.
+At least 3 educational institutions.
+Multiple connecting routes.
+Different bus capacities.
+Available and unavailable buses.
+Delayed buses.
+Examination-priority students.
+Road closures.
+Multiple student transportation requests.
+DATA RULES
+Every record must have a stable ID.
+Validate relationships between records.
+Use timestamps consistently.
+Store region-specific information in data/configuration files.
+Clearly distinguish demo and live records.
+Never invent live transportation information.
+Protect sensitive driver documents and student information.
+IMPLEMENTATION
+
+Create a data-access layer so frontend components do not directly depend on database implementation.
+
+Use local demonstration storage initially. Prepare an optional Firebase adapter for later integration.
+
+ACCEPTANCE TESTS
+All seeded records load correctly.
+Relationships are valid.
+Bus capacities are available.
+Routes connect valid stops.
+Student requests reference valid destinations.
+Examination records contain valid deadlines.
+Data can be reset to its original state.
+EXECUTION
+
+Implement the actual schemas, seed data, validation and data-access services.
+
+Preserve Prompt 1 functionality and prepare the application for Prompt 3.
