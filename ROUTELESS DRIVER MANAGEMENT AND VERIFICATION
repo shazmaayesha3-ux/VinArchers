@@ -1,0 +1,73 @@
+PROMPT 3 — ROUTELESS DRIVER MANAGEMENT AND VERIFICATION
+ROLE
+
+Act as a senior full-stack engineer and cybersecurity engineer.
+
+Continue the existing ROUTELESS application.
+
+OBJECTIVE
+
+Build a functional driver registration, verification and transportation management system.
+
+DRIVER REGISTRATION
+
+Collect:
+
+Full name.
+Mobile number.
+Driving licence number.
+Licence document.
+Assigned bus.
+Bus registration number.
+Assigned route.
+Transport operator.
+
+Use fictional records and simulated document verification for the hackathon.
+
+ADMIN VERIFICATION
+
+Allow administrators to:
+
+View driver applications.
+Review submitted documents.
+Approve drivers.
+Reject drivers.
+Suspend drivers.
+Assign buses.
+Assign routes.
+View verification history.
+
+Never expose licence documents to student or kiosk interfaces.
+
+DRIVER DASHBOARD
+
+Implement:
+
+Bus AVAILABLE.
+Bus UNAVAILABLE.
+Bus DELAYED.
+START JOURNEY.
+END JOURNEY.
+UPDATE SEAT AVAILABILITY.
+VIEW ASSIGNED ROUTE.
+SHARE LOCATION.
+SECURITY RULES
+Drivers can update only their assigned buses.
+Pending drivers cannot start authorized trips.
+Rejected drivers cannot start authorized trips.
+Verify assigned bus and driver before starting a trip.
+Validate all submitted information.
+Record important actions in an audit log.
+
+Use a clearly labelled demo role switcher until real authentication is configured.
+
+ACCEPTANCE TESTS
+Driver can register.
+Admin can approve a driver.
+Admin can reject a driver.
+Unapproved driver cannot start a trip.
+Approved driver can start an assigned bus.
+Driver cannot update another driver's bus.
+Bus status updates are reflected in the student dashboard.
+
+Implement the working functionality and preserve all previous modules.
