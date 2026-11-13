@@ -1,0 +1,81 @@
+PROMPT 6 — ROUTELESS SMART KIOSK AND LOCATION SYSTEM
+ROLE
+
+Act as an IoT solution architect, frontend engineer and transportation systems developer.
+
+Continue the existing ROUTELESS project.
+
+OBJECTIVE
+
+Build a public touchscreen kiosk and integrate simulated GPS tracking.
+
+SMART KIOSK
+
+Create a dedicated kiosk interface designed for:
+
+Raspberry Pi.
+Touchscreen displays.
+Public rural bus stops.
+Landscape orientation.
+Full-screen browser operation.
+
+Main screen:
+
+ROUTELESS — SMART RURAL TRAVEL
+
+"Where do you want to go?"
+
+Provide:
+
+Starting village.
+Current bus stop.
+Destination.
+FIND MY BUS.
+AVAILABLE BUSES.
+ALTERNATIVE ROUTES.
+LIVE BUS INFORMATION.
+HELP.
+LANGUAGE SELECTION.
+KIOSK REQUIREMENTS
+Large buttons.
+Large readable text.
+High contrast.
+Minimal typing.
+English and Kannada.
+Touch-friendly navigation.
+Read-only access.
+No access to private driver documents.
+GPS SYSTEM
+
+Implement:
+
+Driver journey start.
+Browser GPS permission.
+Periodic location updates.
+Trip-specific location records.
+Timestamp validation.
+Last-known location display.
+Simulated GPS for demonstration.
+
+When offline, queue GPS records locally.
+
+Do not pretend simulated coordinates are real GPS.
+
+LOCAL WI-FI
+
+Create an integration interface for driver-to-kiosk communication.
+
+For the prototype, provide a clearly labelled simulation or local API implementation.
+
+Do not assume local Wi-Fi automatically provides internet access.
+
+ACCEPTANCE TESTS
+Kiosk works in full-screen mode.
+Kiosk can search saved routes.
+Kiosk displays bus freshness.
+GPS simulation updates bus positions.
+Stale GPS produces warnings.
+Private information remains inaccessible.
+Kiosk remains usable with saved data.
+
+Preserve all existing modules.
