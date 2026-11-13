@@ -1,0 +1,101 @@
+PROMPT 9 — ROUTELESS INTELLIGENT BUS REALLOCATION ENGINE
+ROLE
+
+Act as a senior algorithm engineer specializing in operations research, resource allocation and emergency transportation optimization.
+
+Continue the existing ROUTELESS project.
+
+OBJECTIVE
+
+Build a deterministic, explainable bus reallocation engine for emergency situations.
+
+INPUTS
+
+Use actual project records:
+
+Operational buses.
+Bus capacities.
+Available drivers.
+Student requests.
+Examination deadlines.
+Travel times.
+Available routes.
+Blocked road segments.
+Transfer points.
+Demand increases.
+Vehicle repositioning requirements.
+HARD CONSTRAINTS
+
+Never:
+
+Allocate unavailable buses.
+Exceed bus capacity.
+Allocate buses without available authorized drivers.
+Use blocked or unsafe roads.
+Assign impossible journeys.
+Ignore repositioning time.
+Promise unheld seats.
+PRIORITY
+
+Use a lexicographic allocation strategy:
+
+Safety and operational feasibility.
+Students with imminent examinations.
+Other examination students.
+Students with earlier arrival deadlines.
+Maximum number of feasible on-time journeys.
+Minimum total journey time.
+Minimum unnecessary transfers.
+
+Do not allow lower-priority optimization objectives to override safety.
+
+ALLOCATION ENGINE
+
+Implement an appropriate deterministic method, such as capacity-constrained matching, min-cost flow or another justified optimization algorithm.
+
+Document the selected algorithm and its limitations.
+
+Separate route calculation from seat allocation.
+
+Track residual capacity after every assignment.
+
+Support reserve vehicles if they are included in the dataset.
+
+RESULTS
+
+Display:
+
+Assigned students.
+Unassigned students.
+Assigned buses.
+Used capacity.
+Remaining capacity.
+Boarding stops.
+Transfer stops.
+Estimated arrival times.
+Examination priority.
+Allocation explanations.
+Reasons for unassignment.
+CRISIS PERFORMANCE
+
+Test the simultaneous scenario:
+
+Two buses unavailable.
+40% additional demand.
+One flooded road.
+Multiple imminent examinations.
+Limited available seats.
+
+Never hardcode successful allocation statistics.
+
+ACCEPTANCE TESTS
+Zero capacity violations.
+Zero unavailable-bus assignments.
+Zero blocked-road assignments.
+Driver authorization respected.
+Examination priority respected.
+Unassigned students explained.
+Repeatable deterministic results.
+Results match an independent reference test on the defined fixtures.
+
+Integrate the engine into the Crisis Control Center and Student Dashboard.
