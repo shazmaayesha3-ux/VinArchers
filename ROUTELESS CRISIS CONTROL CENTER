@@ -1,0 +1,96 @@
+PROMPT 8 — ROUTELESS CRISIS CONTROL CENTER
+ROLE
+
+Act as a senior emergency transportation systems architect.
+
+Continue the existing ROUTELESS project.
+
+OBJECTIVE
+
+Build a complete Crisis Control Center integrated into the existing transportation application.
+
+CRISIS DASHBOARD
+
+Display:
+
+Total buses.
+Operational buses.
+Broken-down buses.
+Available seats.
+Normal student demand.
+Emergency demand.
+Examination students.
+Road closures.
+Affected routes.
+Students requiring transportation.
+Students assigned.
+Students waiting.
+Students expected to arrive on time.
+Students expected to arrive late.
+
+Calculate statistics from actual demonstration records.
+
+EMERGENCY EVENTS
+
+Support:
+
+BUS BREAKDOWN.
+ROAD BLOCKAGE.
+FLOODING.
+DEMAND SURGE.
+DRIVER UNAVAILABLE.
+OTHER TRANSPORTATION EMERGENCY.
+
+Each event must have an ID, type, affected resource, timestamp, severity, verification status and active status.
+
+CRISIS SCENARIO
+
+Create a repeatable simulation:
+
+ACTIVATE EXAMINATION DAY CRISIS
+
+Simulate simultaneously:
+
+Two buses becoming unavailable.
+Demand increasing by 40%.
+One major road becoming flooded.
+Multiple students having examinations within two hours.
+Limited operational bus capacity.
+
+The system must update the actual application data.
+
+CRISIS WORKFLOW
+Disable affected buses.
+Block flooded road segments.
+Recalculate available capacity.
+Identify affected students.
+Identify examination priorities.
+Trigger emergency route calculation.
+Prepare allocation inputs.
+Display affected students and resources.
+
+Include:
+
+RESET SIMULATION.
+
+Reset all modified data to its original seeded state.
+
+OFFLINE CRISIS SUPPORT
+
+Display saved emergency plans and timestamps.
+
+Prepare integration with the offline tiny-signal mechanism.
+
+Never imply a disconnected device has received a new remote alert.
+
+ACCEPTANCE TESTS
+Crisis activates correctly.
+Two buses become unavailable.
+Flooded road is excluded.
+Demand increases by 40%.
+Examination records are recognized.
+Dashboard statistics update from actual records.
+Reset restores original data.
+Crisis events are auditable.
+
+Implement actual functionality, not static dashboard numbers.
