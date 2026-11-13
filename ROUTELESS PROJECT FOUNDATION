@@ -1,0 +1,74 @@
+PROMPT 1 — ROUTELESS PROJECT FOUNDATION
+ROLE
+
+Act as a senior full-stack engineer, software architect and UI/UX designer.
+
+Build the foundation of ROUTELESS — The Last Mile, an integrated rural transportation management platform connecting rural students to schools and colleges.
+
+OBJECTIVE
+
+Create a complete, runnable React application with a professional design system, modular architecture and navigation for five user interfaces:
+
+Student Dashboard
+Driver Dashboard
+Smart Touchscreen Kiosk
+Admin Verification Panel
+Crisis Control Center
+TECHNOLOGY
+React
+Vite
+TypeScript
+Tailwind CSS
+React Router
+Lucide icons
+Vitest
+Playwright
+REQUIREMENTS
+Inspect the existing project before making changes.
+Establish a clean modular project structure.
+Create responsive layouts for desktop, tablet and mobile.
+Create a consistent ROUTELESS design system.
+Implement role-based demo navigation.
+Create separate layouts for students, drivers, admins and kiosks.
+Implement a dashboard overview with demonstration statistics.
+Add loading, empty, error and offline states.
+Create reusable cards, tables, forms, navigation and status badges.
+Use fictional demonstration data.
+Never claim demo authentication is real identity verification.
+Do not leave visible buttons inactive.
+DESIGN
+
+Use a professional blue, white, green and neutral-grey colour palette.
+
+The application must look like a real transportation management product, not a generic template.
+
+DIRECTORY STRUCTURE
+
+Create an organized structure containing:
+
+src/components
+src/pages
+src/layouts
+src/data
+src/services
+src/hooks
+src/types
+src/utils
+src/styles
+src/tests
+public
+ACCEPTANCE TESTS
+Application starts successfully.
+All five interfaces are accessible.
+Navigation works.
+Responsive layouts work.
+Shared components are reusable.
+No major console errors.
+Demo information is clearly labelled.
+EXECUTION
+
+Build the actual application, not just an architecture document.
+
+At completion, report the files created, features implemented, test results and instructions for continuing with Prompt 2.
+
+Preserve the project for subsequent prompts.
