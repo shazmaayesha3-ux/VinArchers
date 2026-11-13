@@ -1,1080 +1,1491 @@
-MASTER ENGINEERING PROMPT — ROUTELESS: THE LAST MILE
-Competition-Ready | Offline-First | Crisis-Resilient | Test-Driven Engineering
-ROLE
-
-You are my senior software architect, full-stack engineer, algorithm designer, security engineer, QA lead and technical partner.
-
-You are responsible for delivering a working, demonstrable engineering project—not merely generating code or describing an architecture.
+# MASTER DEVELOPMENT PROMPT
+# ROUTELESS – AI-POWERED RURAL TRANSPORTATION, SMART KIOSK & EMERGENCY CRISIS MANAGEMENT SYSTEM
 
-Your decisions must prioritize:
+## PROJECT TITLE
 
-Correctness over feature quantity.
-Offline reliability over internet-dependent convenience.
-Mathematical correctness over approximate routing.
-Honest capacity allocation over unrealistic promises.
-Tested functionality over claimed functionality.
-Simplicity over unnecessary complexity.
+**ROUTELESS – The Last Mile: Connecting Rural Students to Education.**
 
-A feature is considered COMPLETE only when its acceptance test passes.
-
-Project: Routeless: The Last Mile
-
-1. MISSION AND CORE PHILOSOPHY
-
-Build an offline-first Progressive Web Application (PWA) that helps rural students in coastal Karnataka reach their schools and colleges when government buses are not running.
-
-Students must receive a calm, understandable, local-language alternative travel plan even when mobile data is unavailable.
-
-Core philosophy: SEND THE PLAN BEFORE THE DISRUPTION. SEND ONLY A TINY SIGNAL DURING IT.
-
-The application must:
-
-Precompute alternative travel plans before disruptions.
-Store personalized plans locally on student devices.
-Receive tiny disruption signals through simulated SMS or other supported delivery mechanisms.
-Display the correct personalized plan without network connectivity.
-Recalculate locally when an unexpected combination of disruptions occurs.
-Never depend on an LLM or external API during disruption handling.
-Primary judge acceptance test
-
-A student with no internet connectivity opens the application or receives a tiny signal.
-
-Within 2 seconds, the application displays:
-
-A calm alert.
-The correct alternative transport.
-The departure time from that student's own pickup stop.
-A backup option.
-An estimated arrival time.
-The student's selected language.
-
-Target devices: low-end Android phones using Chrome, with intermittent 2G and frequent zero-signal conditions.
-
-Region: coastal Karnataka.
-
-Languages:
-
-English.
-Kannada.
-Tulu (alert text only).
-
-All regional, language, transport, route and village information must come from /data/*.json. Never hardcode regional information in application logic.
-
-2. TECHNICAL ARCHITECTURE
-Required stack
-React.
-Vite.
-JavaScript or TypeScript.
-IndexedDB using Dexie.
-Workbox service worker.
-Vitest.
-Playwright.
-Web Crypto API.
-Bundled SVG schematic maps.
-System fonts.
-Strict prohibitions
-No external map tiles.
-No runtime web fonts.
-No external CDNs.
-No GPS dependency.
-No online login during disruption.
-No private keys in frontend bundles or GitHub.
-No runtime LLM calls during disruption.
-No placeholder implementations or fake success states.
-No hardcoded regional information.
-
-The application must work after at least one successful initial synchronization.
-
-Required architecture
-
-Separate the system into:
-
-Routing engine.
-Capacity allocator.
-Disruption engine.
-Precomputation engine.
-Signal parser.
-Signal verification.
-Localization.
-Offline storage.
-Synchronization.
-Reporting/outbox.
-Coordinator interface.
-Student interface.
-Proof and testing dashboard.
-
-All core decision-making logic must be pure, deterministic and independently testable.
-
-3. PROJECT FILE STRUCTURE
-
-Create and maintain this structure:
-
-text
-routeless/
-├── public/
-│   ├── icons/
-│   ├── manifest.webmanifest
-│   └── offline.html
-│
-├── data/
-│   ├── villages.json
-│   ├── stops.json
-│   ├── institutions.json
-│   ├── buses.json
-│   ├── trips.json
-│   ├── students.json
-│   ├── autos.json
-│   ├── roads.json
-│   ├── scenarios.json
-│   ├── reserve-fleet.json
-│   └── config.json
-│
-├── src/
-│   ├── engine/
-│   │   ├── dijkstra.js
-│   │   ├── minHeap.js
-│   │   ├── bruteForceSolver.js
-│   │   ├── allocator.js
-│   │   ├── routeValidator.js
-│   │   └── routeComparator.js
-│   │
-│   ├── disruption/
-│   │   ├── scenarioEngine.js
-│   │   ├── signalParser.js
-│   │   ├── signalVerifier.js
-│   │   └── compoundScenario.js
-│   │
-│   ├── precompute/
-│   │   ├── planGenerator.js
-│   │   └── planStore.js
-│   │
-│   ├── offline/
-│   │   ├── database.js
-│   │   ├── cacheManager.js
-│   │   ├── serviceWorker.js
-│   │   └── storageRecovery.js
-│   │
-│   ├── sync/
-│   │   ├── syncManager.js
-│   │   ├── outbox.js
-│   │   └── idempotency.js
-│   │
-│   ├── i18n/
-│   │   ├── en.json
-│   │   ├── kn.json
-│   │   ├── tcy.json
-│   │   └── translator.js
-│   │
-│   ├── security/
-│   │   ├── crypto.js
-│   │   └── keyManager.js
-│   │
-│   ├── components/
-│   ├── pages/
-│   │   ├── StudentDashboard.jsx
-│   │   ├── CoordinatorDashboard.jsx
-│   │   └── ProofPage.jsx
-│   │
-│   ├── services/
-│   ├── tests/
-│   ├── App.jsx
-│   └── main.jsx
-│
-├── fixtures/
-├── docs/
-├── tests/
-├── ASSUMPTIONS.md
-├── PROMPTS.md
-├── README.md
-├── package.json
-└── vite.config.js
-
-
-You may adjust the structure when technically justified, but preserve clear module separation.
-
-4. DATA AND LOCALIZATION
-
-Create realistic synthetic data for:
-
-8–10 villages.
-2 colleges.
-6 government buses.
-2 shared autos.
-Reserve transport options.
-Approximately 50 seats per regular bus.
-
-All data must be configurable through JSON.
-
-Language requirements
-
-English: en.json
-
-Kannada: kn.json
-
-Tulu: tcy.json, written in Kannada script.
-
-Requirements:
-
-Device language is the default.
-Users can change language offline.
-English is the fallback language.
-All student-facing alert templates must be available in English and Kannada.
-Tulu must cover all alert-related keys.
-Kannada wording should sound conversational rather than overly formal.
-Use large numerals and recognizable icons.
-
-Never allow a missing translation key to produce a blank interface.
-
-5. ROUTING ENGINE — TIME-DEPENDENT EARLIEST-ARRIVAL DIJKSTRA
-
-This is the central technical component.
-
-Implement a time-dependent earliest-arrival Dijkstra algorithm in pure JavaScript using a binary min-heap.
-
-Graph model
-
-Nodes represent stops.
-
-Edges represent individual transport legs.
-
-Each leg contains:
-
-json
-{
-  "trip_id": "BUS12",
-  "segment_id": "BUS12_S1",
-  "from_stop": "VILLAGE_A",
-  "to_stop": "VILLAGE_B",
-  "depart_time": 480,
-  "arrive_time": 510,
-  "seats_left": 12,
-  "mode": "bus",
-  "cost": 0
-}
-
-
-Travel times use minutes from midnight.
-
-Shared autos and reserve vehicles are ordinary graph edges.
-
-Road closures and flooded roads block specific segments, not entire trips.
-
-Search state
-
-Maintain sufficient state to distinguish routes with different future possibilities:
-
-(stop, current_trip, transfer_count, first_trip)
-
-Maintain Pareto-optimal labels where necessary.
-
-Do not incorrectly discard a route merely because another route reaches the same stop earlier if it has a materially different current trip, transfer eligibility, first trip or resource constraint.
-
-Transfer rules
-Configurable transfer buffer.
-Maximum number of transfers.
-No transfer buffer when continuing the same trip.
-Enforce transfer buffer when changing trips.
-Waiting is allowed.
-Reject missed connections.
-Exclude blocked segments.
-Exclude trips marked not_running.
-Exclude legs with zero seats when running capacity-constrained allocation.
-Route ranking
-
-Compare routes lexicographically:
-
-Earliest arrival.
-Fewest transfers.
-Fewest shared-auto legs.
-Deterministic vehicle-ID tie-break.
-
-Seat availability is a feasibility constraint, not permission to invent capacity.
-
-Mathematical correctness
-
-The implementation must preserve the FIFO property required by the time-dependent label-setting algorithm.
+**Main Tagline:**  
+"No Network Should Mean No Missed Journey. Connecting Rural Students to Education."
 
-If the model is extended with non-FIFO travel times, do not silently claim ordinary Dijkstra remains correct. Identify the change and select a mathematically valid alternative.
+---
 
-Output
+# 1. YOUR ROLE
 
-Return:
+Act as a senior full-stack developer, AI engineer, UI/UX designer, database architect, cybersecurity engineer, IoT solution architect and transportation optimization specialist.
 
-Complete list of legs.
-Vehicle for every leg.
-Transport mode.
-Departure time from the student's own stop.
-Transfer stops.
-Number of transfers.
-Total cost.
-Final arrival time.
-Available capacity information.
+Your responsibility is to design, develop and deliver a complete, functional, responsive and deployment-ready web application called ROUTELESS.
 
-Return null when no feasible path exists.
+This project is designed for a rural transportation hackathon.
 
-Backup route
+Do not create merely a static website, UI prototype or presentation.
 
-Run routing again with the best route's first vehicle banned.
+Build a practical, working application with:
 
-The backup must use a different first vehicle.
+- Functional dashboards.
+- Shared database architecture.
+- Verified driver management.
+- Student transportation search.
+- Intelligent route planning.
+- Live and simulated GPS tracking.
+- Missed Bus Rescue.
+- Offline-first PWA.
+- Public touchscreen kiosk.
+- Local Wi-Fi communication architecture.
+- Emergency transportation management.
+- AI-assisted route explanations.
+- Intelligent bus reallocation.
+- Examination priority management.
+- Crisis simulation and recovery.
 
-If no valid backup exists, explicitly report that no backup is available.
+The system must work with:
 
-Independent correctness verification
+- 4G and Wi-Fi.
+- Weak 3G and 2G networks.
+- Intermittent internet connectivity.
+- Completely offline environments.
+- Public touchscreen kiosks at rural bus stops.
 
-Build a brute-force reference solver independently of Dijkstra.
+Prioritize working functionality, data accuracy, reliability, accessibility and a professional user experience.
 
-Test both algorithms on:
+---
 
-Waiting connections.
-Multiple transfers.
-Missed connections.
-Different first vehicles.
-Blocked roads.
-Unreachable destinations.
-Zero-seat legs.
-Multiple disruption combinations.
-Equal-arrival tie-breaks.
+# 2. PROBLEM STATEMENT
 
-Dijkstra must match the reference solver for every tested fixture.
+Rural students face transportation difficulties because of:
 
-6. CAPACITY-AWARE ALLOCATOR
+1. Limited government and private buses.
+2. Sudden bus cancellations and delays.
+3. Lack of accurate bus availability information.
+4. Students missing buses because they do not know their locations.
+5. Lack of direct transportation to schools and colleges.
+6. Difficulty finding alternative buses and transfer points.
+7. Poor internet connectivity.
+8. Students without smartphones.
+9. Sudden transportation emergencies.
+10. Increased demand during examination periods.
+11. Bus breakdowns and unavailable drivers.
+12. Flooding and road closures.
 
-Keep capacity allocation separate from the routing algorithm.
+ROUTELESS must provide a centralized transportation information and emergency journey-management platform.
 
-Priority order
-Students with exams today.
-Earliest exam deadline.
-Earlier arrive-by deadline.
-Greater travel distance.
-Registration sequence.
-Student ID.
-Allocation process
+---
 
-For each affected student:
+# 3. COMPLETE SYSTEM ARCHITECTURE
 
-Run Dijkstra against residual capacity.
-Find the best feasible path.
-Allocate capacity on every leg.
-Decrement residual capacity on every assigned segment.
-Continue to the next student.
-If no path exists, report overflow explicitly.
-Reservation states
+Build five primary interfaces:
 
-HELD: Capacity has actually been allocated and verified.
+1. Verified Driver Dashboard.
+2. Student Dashboard.
+3. Smart Touchscreen Kiosk.
+4. Admin Verification Panel.
+5. Crisis Control Center.
 
-PLANNED: A feasible route exists, but no seat is reserved.
+All interfaces must communicate through a shared backend and synchronization architecture.
 
-UNRESERVED: A fallback or unverified option is being presented.
+The system must have two operating modes:
 
-Never show a planned route as a held reservation.
+**NORMAL MODE**
+- Regular transportation management.
+- Bus tracking.
+- Student journey planning.
+- Alternative bus suggestions.
+- Missed Bus Rescue.
 
-All-or-nothing allocation
+**CRISIS MODE**
+- Emergency event management.
+- Bus breakdown handling.
+- Road closure handling.
+- Demand surge management.
+- Examination priority.
+- Bus reallocation.
+- Emergency route optimization.
+- Student allocation monitoring.
 
-A multi-leg route must be allocated atomically.
+The system must switch between Normal Mode and Crisis Mode without requiring a separate application.
 
-If any segment cannot accommodate the student, roll back the entire allocation before trying another route.
+---
 
-Never leave partially reserved journeys.
+# 4. VERIFIED DRIVER DASHBOARD
 
-Exam deadline guardrail
+Create a secure dashboard exclusively for registered and approved drivers.
 
-If an exam student's best route arrives after their exam deadline:
+## Driver Registration
 
-Attempt another feasible route.
-Activate configured reserve vehicles.
-Re-run allocation.
-Report the outcome honestly.
+Collect:
 
-Never promise that an exam deadline can be met if no feasible capacity exists.
+- Full name.
+- Mobile number.
+- Driving licence number.
+- Driving licence document.
+- Assigned bus number.
+- Bus registration number.
+- Assigned route.
+- Transport operator details.
 
-Demand surge
+## Driver Verification
 
-Support:
+Implement:
 
-demand_multiplier
+- Mobile OTP verification.
+- Licence document submission.
+- Admin manual document review.
+- Approval and rejection.
+- Verified driver status.
+- Secure authentication.
 
-Example:
+Do not consider entering a licence number sufficient proof of identity.
 
-1.4 represents a 40% demand increase.
+For the prototype, use manual admin verification. Design an integration point for an authorized licence verification service in production.
 
-The multiplier must be defined in /data/config.json.
+Never expose driver licence numbers or documents to students.
 
-Generate additional synthetic demand deterministically, with unique student IDs and documented generation rules.
+## Driver Controls
 
-Never multiply the capacity of an existing bus.
+Implement:
 
-Allocator invariants
-No segment is over-allocated.
-No seat is assigned twice.
-Unaffected reservations remain intact.
-Processing order is deterministic.
-All-or-nothing reservations.
-Overflow is explicit.
-7. PRECOMPUTATION — PLAN BEFORE DISRUPTION
+- BUS AVAILABLE.
+- BUS UNAVAILABLE.
+- BUS DELAYED.
+- START JOURNEY.
+- END JOURNEY.
+- SHARE LIVE LOCATION.
+- VIEW ASSIGNED ROUTE.
+- UPDATE SEAT AVAILABILITY.
 
-Before a disruption occurs, generate personalized plans for:
+When START JOURNEY is pressed:
 
-Normal operation.
-Every single-bus-out scenario.
-Common two-bus-out scenarios where practical.
-Configured road closures.
-Common compound scenarios.
+1. Verify driver approval.
+2. Verify assigned bus.
+3. Record journey start time.
+4. Request GPS permission.
+5. Start collecting coordinates.
+6. Save location updates locally when offline.
+7. Synchronize when connectivity returns.
+8. Generate a trip-specific verification PIN or QR code.
 
-Run the allocator for affected students.
+Drivers must only update buses assigned to their accounts.
 
-Store each student's personalized result locally.
+An unapproved driver must never start an authorized journey.
 
-Each plan must include:
+---
 
-json
-{
-  "scenario_id": "BUS12:OFF",
-  "student_id": "STU001",
-  "plan_a": {},
-  "plan_b": {},
-  "reservation_status": "HELD",
-  "messages": {
-    "en": {},
-    "kn": {},
-    "tcy": {}
-  },
-  "sms_short": "",
-  "plan_version": 1,
-  "created_at": ""
-}
+# 5. STUDENT DASHBOARD
 
+Build a simple and accessible student dashboard.
 
-Use appropriate reservation status for each route.
+## Destination Search
 
-At disruption time:
+Allow students to enter:
 
-Parse the incoming signal.
-Verify its validity.
-Check sequence numbers.
-Look up the matching precomputed scenario.
-Retrieve the student's plan.
-Render the alert.
+- Starting village.
+- Current bus stop.
+- Destination.
+- School or college.
+- Preferred arrival time.
 
-Do not recompute if a valid precomputed plan exists and the local data has not changed.
-
-For an unrecognized compound scenario, run the same deterministic routing and allocation engine locally.
-
-No network or LLM calls are allowed in this process.
-
-8. TINY-SIGNAL DESIGN AND SECURITY
-Simple signal
-text
-BUS12:OFF#42
-
-Compound signal
-text
-CRISIS:OFF=BUS12+BUS14|BLOCK=V3-V4|SURGE=1.4#43
-
-
-Support:
-
-Single-bus disruptions.
-Multiple bus disruptions.
-Blocked road segments.
-Demand multipliers.
-Combined disruptions.
-Sequence handling
-Apply only the highest valid sequence number for the relevant service day and signal authority.
-Ignore duplicates.
-Ignore out-of-order signals.
-Persist the highest accepted sequence number.
-Never allow an older signal to overwrite a newer state.
-Handle service-day changes explicitly.
-Cryptographic verification
-
-Use ECDSA P-256 with SHA-256 through the Web Crypto API.
-
-Requirements:
-
-Public verification key bundled with the application.
-Private signing key held exclusively by the coordinator's trusted signing environment.
-Signature covers the complete canonical signal payload.
-Bind signature to service day, sequence number, expiry, scenario version and disruption contents.
-Reject invalid signatures.
-Reject expired signals.
-Prevent replay across service days.
-Never include private signing keys in frontend bundles or public repositories.
-
-For the hackathon, signing and SMS delivery may be simulated.
-
-Performance targets
-Precomputed signal lookup and rendering: under 2 seconds.
-Compound scenario routing and allocation: benchmark separately, with a target under 100 ms on the defined synthetic graph.
-If a performance target fails, show actual measurements rather than claiming success.
-9. CALM ALERT DESIGN
-
-Use the same four-part structure for every alert.
-
-Part 1 — Reassurance
-
-Explain what changed and reassure the student that an alternative route is available.
-
-Part 2 — Best option
+## Bus Availability
 
 Display:
 
-Bus or vehicle.
-Route.
-Departure time from THIS student's own stop.
-Part 3 — Backup
+- Bus number.
+- Registration number.
+- Starting location.
+- Destination.
+- Route.
+- Departure time.
+- Expected arrival time.
+- Bus status.
+- Available seats, if recently confirmed.
+- Driver verification status.
+- Last updated time.
 
-Show one alternative using a different first vehicle.
+Statuses:
 
-Part 4 — Estimated arrival
+- AVAILABLE.
+- DELAYED.
+- UNAVAILABLE.
+- NOT CONFIRMED.
+- OFFLINE / LAST KNOWN STATUS.
 
-Display the expected arrival time.
+Never present unverified information as confirmed.
 
-Language rules
+## Bus Details
 
-Avoid alarming vocabulary, including:
+Display:
 
-Cancelled.
-Failed.
-Disrupted.
-Emergency.
+- Bus number.
+- Route details.
+- Verified driver badge.
+- Upcoming stops.
+- Available seats.
+- Estimated arrival time.
+- Current or last-known location.
+- Last GPS update.
 
-Prefer:
+## Alternative Bus Search
 
-Not running today.
-Route changed.
-Another option is available.
+If the regular bus is unavailable, identify alternative connections.
 
-Use spoken-style Kannada.
+Example:
+
+Village A → Village B → Town → Engineering College.
+
+Display:
+
+- First bus.
+- Boarding stop.
+- Destination stop.
+- Transfer location.
+- Connecting bus.
+- Waiting time.
+- Total estimated travel time.
+
+Show alternative journeys whenever feasible.
+
+---
+
+# 6. AI-POWERED SMART ROUTE PLANNER
+
+Develop an intelligent graph-based routing engine.
+
+Students enter their starting village and destination.
+
+Compare journeys using:
+
+1. Travel time.
+2. Bus availability.
+3. Number of transfers.
+4. Waiting time.
+5. Available seats.
+6. Information reliability.
+7. Preferred arrival time.
+8. Emergency road accessibility.
+9. Examination arrival deadlines.
+
+## Routing Algorithm
+
+Use Dijkstra's algorithm or A*.
+
+Represent:
+
+- Bus stops as graph nodes.
+- Bus connections as graph edges.
+- Travel time as edge weights.
+- Transfers as additional penalties.
+- Availability as route constraints.
+- Road accessibility as a safety constraint.
+
+The routing engine must operate offline.
+
+Use Gemini AI to:
+
+- Understand natural-language student requests.
+- Explain recommended journeys.
+- Summarize alternative routes.
+- Answer questions about route instructions.
+
+AI must never invent bus numbers, times, stops, routes or availability.
+
+All route information must come from database records or clearly labelled demonstration data.
+
+---
+
+# 7. MISSED BUS RESCUE
+
+Implement:
+
+**MISSED BUS RESCUE – Find Your Next Boarding Opportunity.**
+
+Workflow:
+
+1. Detect that the selected bus has departed.
+2. Retrieve the latest GPS location.
+3. Identify upcoming authorized stops.
+4. Estimate bus arrival times.
+5. Calculate student travel time to each stop.
+6. Compare the arrival times.
+7. Add a safety buffer.
+8. Identify a feasible boarding opportunity.
+9. Otherwise recommend another bus.
+
+Example:
+
+Student location: Village A.
+
+Bus:
+- Departed Village A at 8:00 AM.
+- Expected at Village B at 8:15 AM.
+- Expected at Town at 8:30 AM.
+
+If the student can safely reach Village B in time, recommend it as a possible boarding stop.
+
+Otherwise suggest an alternative bus.
+
+Never encourage students to chase a moving bus or board outside authorized stops.
+
+Display GPS freshness and reliability.
+
+If GPS information is stale, do not present an ETA as live.
+
+---
+
+# 8. GPS TRACKING SYSTEM
+
+Implement browser-based GPS using the Geolocation API.
+
+Features:
+
+- Driver starts journey.
+- GPS coordinates collected periodically.
+- Location stored in the database.
+- Students view buses on a map.
+- Kiosks receive updates when connected.
+- Offline coordinates stored locally.
+- Queued coordinates synchronized later.
+
+Use Leaflet and OpenStreetMap-compatible mapping services.
+
+Design future compatibility with dedicated GPS hardware.
+
+Do not require dedicated hardware for the prototype.
+
+Clearly communicate that browser GPS recording can stop when the operating system suspends the application.
+
+---
+
+# 9. OFFLINE-FIRST PWA
+
+This is one of the most important project requirements.
+
+Build ROUTELESS as an Offline-First Progressive Web Application.
+
+Technologies:
+
+- React PWA.
+- Service Worker.
+- IndexedDB.
+- Local caching.
+- Background synchronization where supported.
+- Firebase Firestore.
+
+## Offline Data
+
+Store:
+
+- Bus information.
+- Routes.
+- Bus stops.
+- Timetables.
+- School and college destinations.
+- Alternative connections.
+- Last-known bus status.
+- Saved emergency instructions.
+- Last synchronized crisis plan.
+
+## Offline Student Features
+
+Students must be able to:
+
+- Open the installed application.
+- Search destinations.
+- View saved timetables.
+- View saved routes.
+- Calculate alternative routes.
+- Identify transfer points.
+- View last-confirmed bus information.
+
+## Offline Driver Features
+
+Drivers must be able to:
+
+- Open the cached application.
+- Record journey status.
+- Store GPS coordinates.
+- Queue updates.
+- Synchronize later.
+
+## Store-and-Forward Synchronization
+
+1. Collect GPS coordinates locally.
+2. Attach timestamps and trip IDs.
+3. Store unsent records in IndexedDB.
+4. Upload when connectivity returns.
+5. Prevent duplicate uploads.
+6. Preserve original timestamps.
+7. Mark synchronized records.
+
+## Network Modes
+
+Implement:
+
+- FULL CONNECTIVITY MODE.
+- LOW DATA MODE.
+- OFFLINE MODE.
+
+Low Data Mode must:
+
+- Reduce synchronization frequency.
+- Avoid unnecessary images.
+- Reduce map requests.
+- Download only changed records.
+- Prefer text-based information.
+
+Display:
+
+- Online / Offline status.
+- Last synchronization time.
+- Data freshness warnings.
+
+IMPORTANT: Offline mode cannot receive new remote updates. Always show saved information with its timestamp.
+
+---
+
+# 10. SMART TOUCHSCREEN KIOSK
+
+Build a dedicated public kiosk interface.
+
+Target deployment:
+
+- Raspberry Pi.
+- Compatible computer.
+- Touchscreen display.
+- Locally installed browser application.
+
+For the hackathon, implement a browser-based full-screen kiosk.
+
+## Main Screen
+
+ROUTELESS – SMART RURAL TRAVEL
+
+"Where do you want to go?"
+
+Fields:
+
+- Current village.
+- Current bus stop.
+- Destination.
+- School / college.
+
+Large buttons:
+
+- FIND MY BUS.
+- AVAILABLE BUSES.
+- ALTERNATIVE ROUTES.
+- LIVE BUS INFORMATION.
+- HELP / VOICE SEARCH.
+- LANGUAGE SELECTION.
+
+## Kiosk UI
 
 Use:
 
-Large numerals.
-Clear icons.
-Green for go.
-Amber for changed or caution.
-System fonts.
-Accessible contrast.
+- Large text.
+- Large buttons.
+- High contrast.
+- Minimal typing.
+- Clear icons.
+- English and Kannada support.
+- Landscape layout.
+- Touch-friendly navigation.
 
-If Kannada or Tulu glyph rendering fails, display English with icons and numerals.
-
-Never display a misleading backup or claim an unreserved seat is held.
-
-10. FAILURE MODEL — F1 TO F16
-
-Every failure row must have an automated or documented reproducible acceptance test.
-
-F1 — No network at disruption
-
-Cached plans and local Dijkstra must work.
-
-Zero network calls during disruption handling.
-
-F2 — Tiny signal only
-
-Map the signal to a stored plan and render the complete local-language alert.
-
-F3 — Flaky 2G
-
-Synchronization must resume safely.
-
-UI must never block waiting for network completion.
-
-F4 — First open with no signal
+## Kiosk Results
 
 Show:
 
-"Connect once to download your plan."
+- Bus number.
+- Route.
+- Availability status.
+- Driver verification.
+- Last updated time.
+- Available seats.
+- Next stop.
+- Reliable ETA.
+- Boarding location.
+- Transfer point.
+- Alternative journey.
 
-Never show a blank screen or crash.
+## Offline Kiosk
 
-F5 — Stale plan
+The kiosk must have:
 
-Always display:
+- Locally installed application files.
+- Local database.
+- Saved timetables.
+- Saved routes.
+- Offline routing engine.
+- Optional permitted offline map data.
 
-"Plan last updated: [time]"
+It must work after internet disconnection and application restart.
 
-Past the configured staleness threshold, show an amber notice.
+Display the timestamp of its last synchronized emergency plan.
 
-Continue displaying the available plan.
+---
 
-F6 — Duplicate or delayed signals
+# 11. LOCAL WI-FI COMMUNICATION
 
-Sequence-number handling must guarantee that the latest accepted state wins.
+Design local communication between authorized driver devices and kiosks.
 
-F7 — Capacity overflow
+Workflow:
 
-Report overflow explicitly.
+1. Kiosk connects to a local Wi-Fi network.
+2. Authorized driver connects to the same network.
+3. Driver sends an authenticated bus update.
+4. Kiosk stores the update locally.
+5. Students view the update.
+6. Kiosk synchronizes when internet returns.
 
-Allocate according to priority and try the next feasible option.
+For the prototype, implement a local API or simulated communication if physical network configuration is unavailable.
 
-F8 — No path exists
+Local Wi-Fi does not automatically provide internet connectivity.
 
-Show a calm explanation.
+---
 
-Suggest available later buses, autos or coordinator assistance.
+# 12. SMS BACKUP
 
-Flag the case in the coordinator dashboard.
+Design an optional SMS fallback.
 
-F9 — Multiple disruptions
+Include:
 
-Recompute using the combined disruption state.
+- Bus ID.
+- Trip ID.
+- Timestamp.
+- GPS coordinates.
+- Status.
 
-Capacity allocation must remain consistent.
+An SMS gateway or authorized receiving service processes the message.
 
-F10 — LLM unavailable or bad output
+Treat this as a future integration unless a working provider is configured.
 
-Templates are the default.
+SMS requires cellular service. Do not claim that SMS works without cellular coverage.
 
-Validate any optional LLM-generated content for:
+---
 
-Required placeholders.
-Length.
-Forbidden wording.
-Required four-part order.
+# 13. ADMIN VERIFICATION PANEL
 
-Discard invalid output.
+Create a secure admin dashboard.
 
-F11 — Stale service worker
+Admin functions:
 
-Use versioned caches.
+- Approve and reject drivers.
+- Review licence documents.
+- Manage buses.
+- Assign drivers.
+- Manage routes.
+- Manage bus stops.
+- Manage schools and colleges.
+- Manage timetables.
+- Review suspicious activity.
+- Monitor bus updates.
+- Manage kiosk locations.
+- Monitor synchronization.
+- Activate and deactivate crisis events.
+- Review emergency allocations.
 
-Update on the next open without wiping IndexedDB data.
+Implement role-based permissions.
 
-Show the application version.
+Students must not access admin functions or verification documents.
 
-F12 — Storage cleared or quota exceeded
+---
 
-Detect missing or unavailable local data.
+# 14. ANTI-SCAM AND STUDENT SAFETY
 
-Rebuild from the server when online.
+Implement:
 
-Protect pending outbox records against ordinary cache updates and recovery operations.
+1. Verified driver badge.
+2. OTP verification.
+3. Admin-approved driver accounts.
+4. Assigned bus verification.
+5. Driver and bus identity matching.
+6. Trip-specific PIN or QR code.
+7. Suspicious bus reporting.
+8. Last-updated status.
+9. Stale GPS warnings.
+10. Authorized boarding stops.
+11. Emergency road safety restrictions.
 
-Be honest about what cannot be recovered if the browser has erased all persistent storage.
+Never publicly display sensitive documents.
 
-F13 — Incorrect device clock
+---
 
-Use schedule data and trusted server time when known.
+# 15. NEW MAJOR MODULE – ROUTELESS CRISIS MODE
 
-Detect and warn about significant clock skew.
+**AI-POWERED EMERGENCY TRANSPORTATION AND RESOURCE OPTIMIZATION**
 
-Do not silently produce misleading time calculations.
+This module must be integrated into the existing ROUTELESS platform.
 
-F14 — Glyph rendering failure
+Do not create an unrelated emergency application.
 
-Fall back to English, icons and numerals.
+The system must transition between NORMAL MODE and CRISIS MODE.
 
-F15 — Offline reports
+## 15.1 Crisis Control Center
 
-Queue reports in the outbox.
+Add a restricted module to the Admin Dashboard called:
 
-Display a pending indicator.
+**CRISIS CONTROL CENTER**
 
-Retry on:
+Display:
 
-Application open.
-Online event.
-Background Sync where supported.
+- Total registered buses.
+- Operational buses.
+- Broken-down buses.
+- Available bus seats.
+- Normal student demand.
+- Emergency student demand.
+- Total students requiring transportation.
+- Students appearing for examinations.
+- Road closures.
+- Available alternative routes.
+- Students assigned to buses.
+- Students waiting for transport.
+- Students expected to reach on time.
+- Students expected to arrive late.
 
-Use stable idempotency keys so repeated delivery attempts do not create duplicate reports.
+Statistics must be calculated from actual demonstration records and allocation results.
 
-F16 — Coordinator-only signal reception
+Provide live updates when connected.
 
-Allow the coordinator to share a personalized plan using:
+## 15.2 Emergency Event Management
 
-Web Share.
-QR code.
-Printable sheet.
-
-Receiving devices must be able to load the shared plan and use it offline after importing it.
-
-11. INVARIANTS
-
-All seven invariants must be tested.
-
-I1: Never display a blank or error-only screen.
-
-I2: Never silently show data known to be stale.
-
-I3: Never claim a seat is held unless the allocator actually holds it.
-
-I4: The departure time shown must be for the student's own pickup stop.
+Allow authorized admins to activate:
 
-I5: Signal-to-alert processing must use zero network calls and zero LLM calls.
+- BUS BREAKDOWN.
+- ROAD BLOCKAGE.
+- FLOODING.
+- DEMAND SURGE.
+- DRIVER UNAVAILABLE.
+- OTHER TRANSPORTATION EMERGENCY.
 
-I6: Alerts must never use alarming wording.
+Each event must contain:
 
-I7: Dijkstra must return an optimal feasible route under the defined routing model.
+- Event ID.
+- Event type.
+- Affected location.
+- Affected bus or road.
+- Start time.
+- Severity.
+- Verification status.
+- Description.
+- Active or resolved status.
 
-12. SUCCESS METRICS AND PROOF DASHBOARD
+Admins must be able to deactivate resolved incidents.
 
-Create a dedicated /proof page.
+## 15.3 Emergency Scenario
 
-It must show actual test results.
+The system must support the following simultaneous emergency:
 
-Performance
-Offline signal-to-alert latency under 2 seconds on the defined test device/profile.
-Precomputed lookup performance.
-Compound-scenario calculation performance.
-Full single-bus-out precomputation under 1 second on the defined device/profile, if achieved.
-Algorithm correctness
-100% match against brute-force reference solver on all generated fixtures.
-Waiting, transfers, missed connections and unreachable stops tested.
-Deterministic tie-breaking verified.
-Allocation
-Zero over-allocated segments.
-Zero duplicate seats.
-Correct priority ordering.
-All feasible exam-priority allocations completed where capacity exists.
-Infeasible students explicitly flagged.
-Arrive-by success rate reported per scenario.
-Alternative coverage
+1. Two government buses become unavailable due to technical breakdowns.
+2. Student demand increases by 40%.
+3. A major road connecting two villages becomes inaccessible due to flooding.
+4. Several students have examinations within the next two hours.
+5. Available buses must be reallocated.
 
-Target at least 90% of affected students receive a valid alternative in the baseline synthetic scenarios.
+The system must automatically recalculate the transportation plan.
 
-Report the remaining cases explicitly.
+---
 
-Localization
-100% required English keys.
-100% required Kannada keys.
-100% Tulu alert keys.
-No missing placeholder values.
-Message linter passes.
-SMS
-English SMS under 160 characters.
-Kannada and Tulu SMS under 70 characters where feasible.
-Otherwise use a compact signal code that expands locally.
-Offline performance
-Application shell under 300 KB gzipped.
-Installable PWA.
-Usable on Slow 2G.
-Offline application launch.
-No external runtime assets.
-Sync
-Repeated drop/reconnect convergence.
-Idempotent action delivery.
-No duplicate reports.
-Adaptability
+# 16. INTELLIGENT BUS REALLOCATION ENGINE
 
-A new road closure, village, bus or demand scenario must be introduced through data/configuration changes wherever possible.
+Develop a deterministic transportation resource optimization engine.
 
-Required proof controls
+The system must:
 
-Failure-injection toggles:
+1. Identify operational buses.
+2. Remove broken-down buses.
+3. Identify available authorized drivers.
+4. Retrieve verified bus seating capacities.
+5. Calculate student demand by village.
+6. Identify examination urgency.
+7. Identify safe roads.
+8. Generate alternative bus assignments.
+9. Calculate student allocations.
+10. Recalculate when new emergency information arrives.
 
-Offline.
-Slow 2G.
-Drop mid-sync.
-LLM down.
-Stale plan.
-Duplicate signal.
-Storage cleared.
-Clock skew.
+## Hard Constraints
 
-One-click scenarios:
+- Never allocate broken-down buses.
+- Never exceed verified seating capacity.
+- Never allocate a bus without an available authorized driver.
+- Never use a verified blocked road.
+- Never use unsafe boarding locations.
+- Consider repositioning time.
+- Preserve unaffected routes where possible.
 
-Bus 12 not running.
-Two buses out.
-Road blocked.
-No alternative for Village X.
-Exam Day Crisis: Two Buses Out + Flooded Road + 40% Demand Surge.
+## Optimization Objectives
 
-The proof page must include:
+- Maximize students arriving on time.
+- Prioritize urgent examination journeys.
+- Respect bus capacity.
+- Respect driver availability.
+- Minimize travel time.
+- Minimize transfers.
+- Minimize unnecessary repositioning.
+- Maintain safe transport operations.
 
-Live pass/fail metrics.
-I1–I7 status.
-Dijkstra path inspector.
-Leg-by-leg explanation.
-Alternative route comparison.
-Seat allocation inspector.
-SMS simulator.
-Language selector.
-Signal-to-alert latency measurement.
-Coordinator overflow view.
+Use a suitable deterministic algorithm such as min-cost flow, integer programming or capacity-constrained allocation.
 
-Never fabricate proof metrics.
+Use lexicographic or carefully weighted priorities so safety and examination urgency cannot be sacrificed merely to reduce travel time.
 
-13. ASSUMPTIONS
+If resources are insufficient, clearly identify unassigned students and explain why.
 
-Document every assumption in ASSUMPTIONS.md.
+Show an explainable allocation result.
 
-Allowed assumptions:
+---
 
-A1. Synthetic realistic dataset of 8–10 villages, 2 colleges, 6 buses, 2 shared autos and approximately 50 seats per regular bus.
+# 17. EXAMINATION PRIORITY MANAGEMENT
 
-A2. Each student device has connected at least once before the disruption day.
+Create a student urgency classification system.
 
-A3. SMS and push delivery are simulated; real MSG91/Twilio integration is documented separately.
+Collect:
 
-A4. Android Chrome is the primary target; iOS is best-effort.
+- Student ID.
+- Starting village.
+- Destination institution.
+- Examination date.
+- Examination start time.
+- Required arrival time.
+- Estimated travel time.
+- Optional accessibility requirements.
 
-A5. One volunteer coordinator per village.
+## Priority Levels
 
-A6. Disruption status is entered by an authorized admin/coordinator, not automatically detected.
+**PRIORITY 1**
 
-A7. Schedules are static for the service day except for status changes.
+Students with imminent examinations requiring immediate transportation.
 
-A8. Travel times come from the dataset, not live traffic or GPS.
+**PRIORITY 2**
 
-A9. Transfer buffers and walking times are configured in data.
+Students with examinations later during the emergency period.
 
-Forbidden assumptions:
+**PRIORITY 3**
 
-Reliable internet during disruption.
-LLM or external API availability during disruption.
-Runtime third-party assets.
-Online login during disruption.
-GPS or live vehicle tracking.
-Hardcoded regional information.
+Students attending regular academic activities.
 
-If another assumption is required, STOP and ask me before introducing it.
+Consider:
 
-14. MILESTONES
+- Examination urgency.
+- Feasible travel time.
+- Safety.
+- Waiting time.
+- Accessibility needs.
 
-Work sequentially.
+Do not allocate based on registration order alone.
 
-Every milestone must begin with its acceptance tests.
+Allow administrators to review allocations and prevent unfair discrimination.
 
-M0 — PWA shell
+Use fictional examination records for demonstration.
 
-Deliver:
+In production, integrate verified institutional examination schedules.
 
-React/Vite application.
-Basic student interface.
-Service worker.
-Offline shell.
-Installable manifest.
-Version display.
+---
 
-Acceptance test:
+# 18. DYNAMIC ROAD CLOSURE AND FLOOD ROUTING
 
-The application opens successfully in airplane mode after installation.
+Extend the existing routing graph.
 
-M1 — Data, Dijkstra and allocator
+When a road is blocked:
 
-Deliver:
+1. Identify the affected road segment.
+2. Mark it inaccessible.
+3. Remove it from the active graph.
+4. Recalculate alternative journeys.
+5. Validate physical road accessibility.
+6. Calculate revised travel times.
+7. Identify alternative boarding stops.
+8. Identify transfer points.
+9. Update student journeys.
+10. Update kiosk information.
 
-Synthetic dataset.
-Binary min-heap.
-Time-dependent Dijkstra.
-Independent brute-force reference solver.
-Capacity allocator.
-Priority ordering.
-Backup routing.
+Use Dijkstra or A* with updated road data.
 
-Acceptance test:
+Never recommend a road marked flooded, closed or unsafe.
 
-I3 and I7 pass.
-Brute-force comparisons pass.
-Zero seat over-allocation.
-Overflow cases handled.
-M2 — Precomputation, signals and localization
+---
 
-Deliver:
+# 19. DEMAND SURGE PREDICTION
 
-Personalized plans.
-Single-bus-out scenarios.
-Signal parser.
-Sequence handling.
-Signal verification.
-Calm alerts.
-English/Kannada/Tulu templates.
-SMS simulator.
+Implement adjustable demand increase.
 
-Acceptance test:
+Formula:
 
-F1, F2 and F6 pass.
-I4, I5 and I6 pass.
-Message linter passes.
-Offline alert latency passes.
-M3 — Sync and recovery
+Emergency Demand = Normal Demand × (1 + Demand Increase Percentage)
 
-Deliver:
+Example:
 
-IndexedDB persistence.
-Delta synchronization.
-Outbox.
-Idempotency.
-Staleness indicators.
-Storage recovery.
+Normal student demand = 500.
 
-Acceptance test:
+Demand increase = 40%.
 
-F3, F4, F5, F12 and F15 pass.
+Emergency demand = 700.
 
-M4 — Proof and coordinator dashboard
+Allow admins to change the demand percentage.
 
-Deliver:
+Display:
 
-/proof page.
-Failure injection.
-Scenario controls.
-Dijkstra inspector.
-Seat inspector.
-Coordinator overflow view.
+- Normal demand.
+- Additional estimated demand.
+- Total emergency demand.
+- Actual registered student requests.
 
-Acceptance test:
+Clearly distinguish estimates from confirmed requests.
 
-All displayed metrics are reproducible and traceable to tests.
+---
 
-M5 — Surprise drill and deployment
+# 20. CRISIS SIMULATION ENGINE
 
-Deliver:
+This is a mandatory hackathon demonstration feature.
 
-Compound crisis scenario.
-Demand surge.
-Reserve transport.
-Flooded-road scenario.
-Real-device airplane-mode test.
-README.
-ASSUMPTIONS.md.
-PROMPTS.md.
-Public GitHub repository.
-Deployed application.
+Create two large admin controls:
 
-Acceptance test:
+**ACTIVATE EXAMINATION DAY CRISIS**
 
-Verify the deployed application and repository in an incognito browser.
+**RESET SIMULATION**
 
-15. SURPRISE-HURDLE PROTOCOL
+When the first button is pressed, simulate all emergency events simultaneously:
 
-The application must handle a surprise challenge without unnecessarily rewriting the architecture.
+- Two government bus breakdowns.
+- 40% additional student demand.
+- One flooded road.
+- Multiple examination schedules.
+- Limited operational buses.
+- Reallocation of available transport resources.
 
-Example surprise:
+Automatically:
 
-"Two government buses are not running, a road between two villages is flooded, demand increases by 40%, and several students have exams within 120 minutes."
+1. Update bus availability.
+2. Disable the flooded road.
+3. Increase demand.
+4. Recalculate safe routes.
+5. Prioritize examination students.
+6. Reallocate available buses.
+7. Assign students to feasible journeys.
+8. Update arrival estimates.
+9. Identify students who cannot arrive on time.
+10. Display the optimized emergency transportation plan.
 
-Required response:
+The simulation must calculate real results from the sample dataset.
 
-Step 1 — Inspect the change
+Do not hardcode successful allocation statistics or show fake optimization results.
 
-List:
+The RESET SIMULATION button must restore:
 
-Which JSON files change.
-Which configuration fields change.
-Which scenarios are affected.
-Which tests must remain passing.
-Step 2 — Update data
+- Original bus statuses.
+- Original road accessibility.
+- Original demand.
+- Original student schedules.
+- Original bus assignments.
+- Normal route recommendations.
 
-Change the disruption data, blocked edges, demand multiplier and reserve fleet configuration.
+The simulation must be repeatable.
 
-Step 3 — Recompute
+---
 
-Apply the combined disruption state.
+# 21. EMERGENCY RESULT DASHBOARD
 
-Run the same Dijkstra engine and capacity allocator.
+After optimization, display:
 
-Step 4 — Verify
+- Total students requiring transport.
+- Students successfully assigned.
+- Students expected to reach on time.
+- Students expected to arrive late.
+- Students unassigned.
+- Operational buses.
+- Reallocated buses.
+- Average estimated journey time.
+- Affected routes.
+- Safe alternative routes.
 
-Check:
+Include before-and-after comparisons.
 
-Exam priority.
-Route optimality.
-Seat integrity.
-Reserve vehicle activation.
-Offline signal handling.
-Student-specific departure times.
-Arrival feasibility.
-Alert localization.
-Step 5 — Demonstrate
+Use charts and visual summaries.
 
-Fire the compound signal in airplane mode.
+All statistics must be derived from the actual simulated allocation data.
 
-Show the resulting personalized student plan.
+Include a clear explanation of why each bus and student was assigned.
 
-Never bypass an existing invariant to make a demonstration appear successful.
+---
 
-16. DOCUMENTATION AND EVIDENCE
+# 22. STUDENT AND KIOSK EMERGENCY NOTIFICATIONS
 
-README.md must explain:
+Update the Student and Kiosk dashboards during emergencies.
 
-Problem.
-Architecture.
-Routing algorithm.
-Capacity allocation.
-Offline-first approach.
-Security.
-How AI was used.
-Failure test results.
-Known limitations.
-Deployment instructions.
+Display:
 
-ASSUMPTIONS.md must document every approved assumption.
+- Regular bus unavailable.
+- Road closed due to flooding.
+- Alternative bus assigned.
+- New boarding stop.
+- New transfer point.
+- Revised arrival time.
+- Examination priority status.
+- Emergency route instructions.
 
-PROMPTS.md must document:
+When offline:
 
-Prompt used.
-Generated output.
-What went wrong.
-Root cause.
-Refined prompt.
-Verification results.
+- Show the latest saved emergency plan.
+- Display its synchronization timestamp.
+- Warn that the information may be outdated.
+- Queue notifications for synchronization.
 
-Provide one-command test execution.
+Never claim that a disconnected student has received a notification.
 
-Do not claim untested features work.
+---
 
-17. HOW YOU MUST WORK WITH ME
+# 23. CRISIS RECOVERY
 
-Follow this workflow strictly.
+When a breakdown is resolved or a road reopens:
 
-First response
+1. Admin verifies the incident resolution.
+2. Admin deactivates the emergency event.
+3. Restore the operational bus or road status.
+4. Recalculate the routing graph.
+5. Recalculate allocations.
+6. Return to NORMAL MODE when no active crisis remains.
 
-Provide:
+Maintain event history and audit records.
 
-Short architecture and milestone plan.
-Mapping of milestones to failure tests and metrics.
-Exact project file structure.
-Any assumption questions.
-Then begin M0.
-For each milestone
+---
 
-Follow this exact sequence:
+# 24. DATABASE ARCHITECTURE
 
-Acceptance tests.
-Implementation.
-Files created or modified.
-Commands to run.
-How to verify.
-Actual results versus targets.
-Remaining failures and limitations.
+Create organized collections or equivalent database tables.
 
-Do not skip acceptance tests.
+## Users
 
-When something fails
+- User ID.
+- Name.
+- Mobile number.
+- Role.
+- Verification status.
 
-Report:
+## Drivers
 
-Symptom.
-Root cause.
-Minimal fix.
-Verification procedure.
-Actual result.
+- Driver ID.
+- Licence verification status.
+- Assigned bus ID.
+- Assigned route ID.
 
-Record important failures and refinements in PROMPTS.md.
+## Buses
 
-When a surprise constraint appears
+- Bus ID.
+- Registration number.
+- Bus number.
+- Operator.
+- Capacity.
+- Operational status.
 
-First identify which data/configuration fields change and which existing tests must continue passing.
+## Routes
 
-Touch application code only when necessary.
+- Route ID.
+- Route name.
+- Ordered stops.
+- Scheduled connections.
 
-Important execution rules
-Do not generate the entire application in one uncontrolled response.
-Work one milestone at a time.
-Do not invent test results.
-Do not claim deployment without verification.
-Do not claim an offline feature works without testing airplane mode.
-Do not promise capacity that does not exist.
-Never silently introduce assumptions.
-Prefer a smaller, verified system over a larger, unverified system.
-FINAL INSTRUCTION
+## Stops
 
-You are accountable for engineering outcomes.
+- Stop ID.
+- Stop name.
+- Latitude.
+- Longitude.
 
-Your objective is not to produce the largest application.
+## Trips
 
-Your objective is to produce the smallest technically correct, offline-resilient, secure and demonstrable system that satisfies the acceptance criteria.
+- Trip ID.
+- Bus ID.
+- Driver ID.
+- Start time.
+- End time.
+- Trip status.
 
-BEGIN NOW: Present the milestone plan, exact file structure and assumption questions. Then start M0 with its acceptance tests before implementation.
+## Bus Locations
+
+- Trip ID.
+- Latitude.
+- Longitude.
+- Timestamp.
+- Synchronization status.
+
+## Availability
+
+- Bus ID.
+- Status.
+- Last updated time.
+- Available seats.
+
+## Kiosks
+
+- Kiosk ID.
+- Location.
+- Local data version.
+- Last synchronization time.
+
+## Reports
+
+- Report ID.
+- Reporting student.
+- Bus ID.
+- Report type.
+- Description.
+- Review status.
+
+## Crisis Events
+
+- Event ID.
+- Event type.
+- Affected location.
+- Affected bus or road.
+- Severity.
+- Start time.
+- Verification status.
+- Active status.
+
+## Student Transport Requests
+
+- Request ID.
+- Student ID.
+- Starting village.
+- Destination.
+- Required arrival time.
+- Examination priority.
+- Request status.
+
+## Emergency Allocations
+
+- Allocation ID.
+- Student request ID.
+- Bus ID.
+- Driver ID.
+- Assigned route.
+- Boarding stop.
+- Transfer stops.
+- Estimated arrival.
+- Allocation status.
+- Explanation.
+
+## Road Network
+
+- Road segment ID.
+- Starting stop.
+- Ending stop.
+- Travel time.
+- Accessibility status.
+- Closure event ID.
+
+Add validation, authentication, access-control rules, timestamps and audit logging.
+
+---
+
+# 25. TECHNOLOGY STACK
+
+Use:
+
+## Frontend
+
+- React.js.
+- Vite.
+- TypeScript.
+- Tailwind CSS.
+- React Router.
+
+## Offline
+
+- PWA.
+- Service Worker.
+- IndexedDB.
+- Local caching.
+- Background synchronization where supported.
+
+## Backend
+
+- Firebase Authentication.
+- Cloud Firestore.
+- Firebase Storage.
+- Firebase Cloud Functions.
+
+## Maps
+
+- Leaflet.
+- OpenStreetMap-compatible services.
+- Browser Geolocation API.
+
+## AI
+
+- Gemini API.
+
+## Algorithms
+
+- Dijkstra.
+- A* where appropriate.
+- ETA calculation.
+- Min-cost flow or capacity-constrained allocation.
+- Bus connection matching.
+- Transfer optimization.
+- Examination urgency scoring.
+
+## Deployment
+
+- Vercel.
+- GitHub.
+
+Never expose private API keys in frontend code.
+
+Keep secrets on the server.
+
+If Firebase or Gemini is not configured, provide a clearly labelled demonstration mode.
+
+---
+
+# 26. DEMONSTRATION DATA
+
+Create realistic fictional demonstration records.
+
+Minimum dataset:
+
+- 5 villages.
+- 10 bus stops.
+- 8 buses.
+- 5 demonstration drivers.
+- 3 schools or colleges.
+- Multiple interconnected bus routes.
+- Available buses.
+- Delayed buses.
+- Unavailable buses.
+- Multiple alternative connections.
+- Student transport requests.
+- Examination schedules.
+- Road segments.
+- Sample GPS positions.
+
+For Crisis Mode, ensure:
+
+- Two government buses can be disabled.
+- Other buses remain operational.
+- Demand can increase by 40%.
+- One road can be marked flooded.
+- Multiple examination students exist.
+- Remaining bus capacities can be calculated.
+- Some students may remain unassigned if resources are insufficient.
+
+Clearly label all sample records as DEMO DATA.
+
+Do not pretend simulated GPS positions are real locations.
+
+---
+
+# 27. UI/UX DESIGN
+
+Create a professional, modern and trustworthy transportation platform.
+
+Brand: ROUTELESS.
+
+Tagline: Connecting Rural India.
+
+Colour palette:
+
+- Blue.
+- White.
+- Green.
+- Neutral grey.
+
+Design requirements:
+
+- Responsive layouts.
+- Modern dashboard cards.
+- Clear availability badges.
+- Large readable typography.
+- Accessible buttons.
+- Simple navigation.
+- Minimal unnecessary animations.
+- Professional maps and route visualization.
+
+Create separate layouts for:
+
+1. Driver.
+2. Student.
+3. Kiosk.
+4. Admin.
+5. Crisis Control Center.
+
+The kiosk must have a landscape full-screen layout optimized for a 15-inch or larger touchscreen.
+
+The driver dashboard must be mobile-friendly.
+
+Crisis Mode must have a visually distinct emergency interface with clear severity indicators.
+
+Do not overload the interface.
+
+---
+
+# 28. REQUIRED DEMONSTRATION SCENARIOS
+
+The finished application must support all these tests.
+
+## NORMAL TRANSPORTATION TESTS
+
+**Test 1: Normal journey**
+
+Student finds a direct bus.
+
+**Test 2: Bus unavailable**
+
+Regular bus is unavailable and an alternative is recommended.
+
+**Test 3: Multiple transfers**
+
+Student travels through multiple stops.
+
+**Test 4: Missed bus**
+
+System identifies another safe boarding opportunity or alternative bus.
+
+**Test 5: Weak internet**
+
+Low Data Mode activates.
+
+**Test 6: Completely offline kiosk**
+
+Disconnect internet, restart locally installed application, search a destination and calculate a saved alternative route.
+
+**Test 7: Driver verification**
+
+Unapproved driver cannot start an authorized trip.
+
+**Test 8: GPS synchronization**
+
+GPS points are saved offline and synchronized later without duplicates.
+
+**Test 9: Stale bus data**
+
+System displays an explicit stale-information warning.
+
+**Test 10: Local communication**
+
+Driver sends a bus update to a kiosk over local Wi-Fi using an API or simulation.
+
+## CRISIS MODE TESTS
+
+**Test 11: Two bus breakdowns**
+
+Both buses are removed from operational allocation.
+
+**Test 12: 40% demand increase**
+
+Emergency demand is recalculated.
+
+**Test 13: Flooded road**
+
+Blocked road is removed from the routing graph.
+
+**Test 14: Examination urgency**
+
+Imminent examination students receive higher priority.
+
+**Test 15: Bus reallocation**
+
+Operational buses are reassigned according to capacity, driver availability and safe routes.
+
+**Test 16: Insufficient resources**
+
+Unassigned students are identified with clear reasons.
+
+**Test 17: Offline emergency kiosk**
+
+Kiosk displays its last saved emergency plan with a freshness warning.
+
+**Test 18: Crisis recovery**
+
+Resolved incidents can be deactivated and normal transportation recalculated.
+
+---
+
+# 29. THREE-HOUR HACKATHON DEVELOPMENT PRIORITY
+
+Build in the following order.
+
+## First 30 Minutes
+
+- Project setup.
+- Navigation.
+- Login.
+- Driver dashboard.
+- Student dashboard.
+- Kiosk interface.
+- Admin interface.
+
+## 30–65 Minutes
+
+- Driver registration.
+- Admin verification simulation.
+- Bus availability.
+- Bus routes.
+- Demonstration data.
+
+## 65–105 Minutes
+
+- Student bus search.
+- Destination search.
+- Bus details.
+- Route visualization.
+
+## 105–140 Minutes
+
+- Dijkstra routing.
+- Alternative journeys.
+- Missed Bus Rescue.
+- Simulated GPS.
+
+## 140–160 Minutes
+
+- PWA.
+- IndexedDB.
+- Offline mode.
+- Low Data Mode.
+
+## 160–175 Minutes
+
+- Crisis Control Center.
+- Crisis simulation.
+- Bus reallocation.
+- Examination priority.
+- Flood routing.
+
+## 175–180 Minutes
+
+- Testing.
+- Bug fixes.
+- Deployment preparation.
+- GitHub source push.
+
+Prioritize a functioning core prototype over unfinished advanced integrations.
+
+---
+
+# 30. FINAL DELIVERABLES
+
+Generate:
+
+1. Complete React application.
+2. Driver Dashboard.
+3. Student Dashboard.
+4. Smart Kiosk Dashboard.
+5. Admin Verification Panel.
+6. Crisis Control Center.
+7. Firebase integration.
+8. Offline-first PWA.
+9. Route calculation engine.
+10. Simulated GPS tracking.
+11. Missed Bus Rescue.
+12. Crisis simulation engine.
+13. Emergency bus reallocation engine.
+14. Examination priority management.
+15. Dynamic road closure routing.
+16. Demonstration database records.
+17. README.md.
+18. .env.example.
+19. GitHub-ready source code.
+20. Vercel deployment instructions.
+
+The application must be functional and testable.
+
+Do not leave important buttons inactive.
+
+Do not show fake success messages.
+
+Do not hardcode fake optimization results.
+
+If an external integration cannot be completed, clearly label it as simulated or pending configuration.
+
+---
+
+# 31. IMPORTANT DEVELOPMENT RULES
+
+Follow these instructions throughout development:
+
+- Analyze the entire specification before coding.
+- Build modular architecture.
+- Use reusable components.
+- Implement validation.
+- Protect sensitive data.
+- Implement role-based access.
+- Protect API keys.
+- Handle network failures.
+- Prevent duplicate GPS uploads.
+- Preserve timestamps.
+- Distinguish real and demonstration data.
+- Test offline functionality.
+- Test crisis simulation.
+- Test bus capacity constraints.
+- Test road safety constraints.
+- Test driver authorization.
+- Test crisis recovery.
+- Ensure the kiosk works offline after installation.
+- Never invent live transportation information.
+- Explain any incomplete integrations.
+
+Do not spend the entire development time planning. Start building the application after defining the architecture.
+
+If the complete system is too large for one generation, implement it in logical phases while maintaining one integrated project.
+
+At the end of each phase:
+
+1. List completed functionality.
+2. List remaining functionality.
+3. Identify bugs.
+4. Explain how to run the application.
+5. Continue to the next phase without unnecessarily restarting the project.
+
+---
+
+# 32. FINAL PROJECT VISION
+
+ROUTELESS is not just a bus-tracking website.
+
+It is an integrated rural transportation information, journey-rescue and emergency resource-optimization platform.
+
+It must ensure that rural students can find a safe way to reach their educational institutions even when their regular transportation becomes unavailable.
+
+The system must combine:
+
+- Verified transportation information.
+- Secure driver identity.
+- Intelligent route planning.
+- Missed Bus Rescue.
+- Offline-first technology.
+- Public touchscreen kiosks.
+- Low-network synchronization.
+- Local Wi-Fi communication.
+- AI-assisted journey explanations.
+- Emergency event management.
+- Examination-based priority.
+- Dynamic flood and road-closure routing.
+- Intelligent bus reallocation.
+- Resource optimization.
+- Emergency recovery.
+
+**FINAL PROJECT TAGLINE:**
+
+"ROUTELESS – No Network Should Mean No Missed Journey. Connecting Rural Students to Education."
+
+## FINAL COMMAND
+
+Now analyze this complete specification, design the technical architecture, establish the database structure and immediately start building the complete working ROUTELESS application.
+
+Build both NORMAL TRANSPORTATION MODE and CRISIS MODE as integrated modules.
+
+The most important requirement is to demonstrate a working system that can intelligently manage normal transportation and automatically reorganize available buses during an unexpected rural transportation crisis.
+
+Focus on:
+
+1. Real functionality.
+2. Reliable transportation information.
+3. Offline operation.
+4. Student safety.
+5. Explainable route optimization.
+6. Emergency bus reallocation.
+7. Examination priority.
+8. Professional UI/UX.
+9. Hackathon-ready demonstration.
+10. Deployment-ready source code.
+
+
+rate this prompt and tell why
